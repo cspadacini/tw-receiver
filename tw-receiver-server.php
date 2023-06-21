@@ -104,7 +104,7 @@ function performBackup($currentfile){
 	$dircontents = array_diff(scandir($backupdir, 1), array('..', '.')); //removes . and .. dir listings
 	// remove dirs from array
 	foreach ($dircontents as $key => $val) {
-		if(is_dir($backupdir.'/'.$val)){
+		if(is_dir($backupdir.'/'.$val) || !str_starts_with($val, $filenameparts['filename'])){
 			unset($dircontents[$key]);
 		}
 	}
@@ -112,6 +112,8 @@ function performBackup($currentfile){
 	if(count($dircontents) < $backupcount){
 		return true; //no prune required
 	}
+
+	$dircontents = array_values($dircontents);
 	
 	// really basic pruning mechanism, could be improved with date logic
 	foreach($dircontents as $k => $file){
